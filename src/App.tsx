@@ -1,0 +1,681 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { 
+  Sparkles, ShieldCheck, Heart, AlertCircle, Play, 
+  ChevronDown, ChevronUp, Star, Lock, HelpCircle, 
+  Check, Gift, Award, ThumbsUp, ShoppingCart, Info, Smile, CheckCircle
+} from 'lucide-react';
+import { EBOOK_COVER_PATH, PREVIEW_HAIRSTYLE_PATH, testimonials, bonuses, faqItems } from './data';
+import CheckoutModal from './components/CheckoutModal';
+import MembersArea from './components/MembersArea';
+import { BraidsCarousel } from './components/BraidsCarousel';
+
+export default function App() {
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  
+  // Interactive page states
+  const [activeFaqId, setActiveFaqId] = useState<string | null>(null);
+  const [urgencyMinutes, setUrgencyMinutes] = useState(14);
+  const [urgencySeconds, setUrgencySeconds] = useState(59);
+  const [recentPurchaseName, setRecentPurchaseName] = useState<string | null>(null);
+  const [previewPageIndex, setPreviewPageIndex] = useState(0);
+
+  // Offers section ref for smooth scroll
+  const offerSectionRef = useRef<HTMLDivElement>(null);
+
+  // Urgency Timer for header
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setUrgencySeconds(prev => {
+        if (prev === 0) {
+          setUrgencyMinutes(m => (m === 0 ? 14 : m - 1));
+          return 59;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // Purchase Popups simulator (to make the page feel dynamically converting!)
+  useEffect(() => {
+    const names = [
+      'Mariana S.', 'Karina F.', 'Renata de M.', 'Viviane O.', 
+      'Priscila de A.', 'Ana Paula N.', 'Fernanda G.', 'Alessandra Santos'
+    ];
+    let count = 0;
+    const interval = setInterval(() => {
+      const randomName = names[Math.floor(Math.random() * names.length)];
+      setRecentPurchaseName(randomName);
+      // disappear after 4 seconds
+      setTimeout(() => setRecentPurchaseName(null), 4000);
+      count++;
+      if (count > 6) clearInterval(interval);
+    }, 15000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const scrollToOffer = () => {
+    if (offerSectionRef.current) {
+      offerSectionRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const openCheckout = () => {
+    setIsCheckoutOpen(true);
+  };
+
+  const handleCheckoutSuccess = () => {
+    setIsCheckoutOpen(false);
+    setIsUnlocked(true);
+    // Smooth scroll back to top to let them see their unlocked area instantly!
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Sample book pages for interactive preview
+  const bookPages = [
+    {
+      title: "Como trançar mecha por mecha",
+      subtitle: "Capítulo 2: Introdução para Dedos Iniciantes",
+      desc: "Evite puxar com força! O segredo é manter os cotovelos apoiados na mesa para dar firmeza às mãos. Comece dividindo o cabelo com um pente fino umedecido.",
+      visualCode: "01"
+    },
+    {
+      title: "Cabelos Curtinhos caipiras",
+      subtitle: "Capítulo 5: O Truque das Presilhas Ocultas",
+      desc: "Ideal para bebês e pequenininhas com pouco cabelo. Use pequenos elásticos coloridos criando fileiras simétricas até prender nas orelhinhas com mini flores.",
+      visualCode: "02"
+    },
+    {
+      title: "Incorporar fitas sem embolar",
+      subtitle: "Capítulo 3: Costura Caipira",
+      desc: "Prenda a fita de cetim com um grampo invisível antes de trançar. A fita deve sempre acompanhar o lado de fora do cabelo para ficar brilhando na dança.",
+      visualCode: "03"
+    },
+    {
+      title: "Fixação que resiste à quadrilha",
+      subtitle: "Capítulo 9: Higiene e Durabilidade",
+      desc: "Como assentar o frizz sem deixar o cabelo duro ou pesado. O segredo é misturar 1 tampinha de soro fisiológico a borrifadas de fixador suave infantil.",
+      visualCode: "04"
+    }
+  ];
+
+  return (
+    <div className="bg-[#FAF9F6] text-slate-800 font-sans min-h-screen relative selection:bg-rose-500 selection:text-white" id="main-landing-root">
+
+      <AnimatePresence>
+        {isUnlocked ? (
+          // MEMEBERS PREMIUM DASHBOARD (Unlocked)
+          <motion.div
+            key="members-dashboard-view"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <MembersArea onExit={() => setIsUnlocked(false)} />
+          </motion.div>
+        ) : (
+          // VISUALLY CAPTIVATING & PERSUASIVE SALES LANDING PAGE (Normal Mode)
+          <motion.div
+            key="sales-landing-view"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="pb-16"
+          >
+            {/* 1. BARRA DE URGÊNCIA */}
+            <div className="sticky top-0 z-40 bg-rose-600 text-white text-[11px] sm:text-xs font-black text-center py-2.5 px-4 shadow-sm border-b border-rose-500 flex items-center justify-center gap-1.5 flex-wrap">
+              <span className="inline-flex items-center gap-1 bg-rose-700 text-amber-300 px-1.5 py-0.5 rounded-md text-[9px] uppercase tracking-wider font-extrabold shrink-0">
+                ⏰ OFERTA LIMITADA
+              </span>
+              <span>As Festas Juninas Já Começaram! Essa oferta especial expira em </span>
+              <span className="font-mono text-amber-200 underline font-black">
+                {urgencyMinutes.toString().padStart(2, '0')}:{urgencySeconds.toString().padStart(2, '0')}
+              </span>
+              <span> — Garanta agora seu Guia e assista às vídeo aulas imediatamente por e-mail!</span>
+            </div>
+
+            {/* HEADER HERO SECTION */}
+            <header className="relative overflow-hidden bg-gradient-to-b from-rose-500 via-rose-500 to-rose-600 text-white pt-10 pb-16 px-4 md:px-6">
+              
+              {/* Minimalist flags decor */}
+              <div className="absolute top-0 inset-x-0 h-4 flex justify-around opacity-45 select-none pointer-events-none">
+                {Array.from({ length: 14 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className={`w-3 h-4 origin-top transform rotate-12 ${
+                      i % 3 === 0 ? 'bg-amber-300' : i % 3 === 1 ? 'bg-sky-300' : 'bg-emerald-300'
+                    }`}
+                    style={{ clipPath: 'polygon(0% 0%, 100% 0%, 50% 100%)' }}
+                  ></div>
+                ))}
+              </div>
+
+              <div className="max-w-4xl mx-auto text-center space-y-6">
+
+                {/* 2. HEADLINE PRINCIPAL (Emotional pain-focused) */}
+                <h1 className="text-3xl sm:text-4xl md:text-5.5xl font-black tracking-tight leading-none md:leading-tight">
+                  Deixe Sua Filha Linda na Festa Junina Mesmo Que Você <span className="text-amber-300 underline underline-offset-4">Nunca Tenha Feito</span> Uma Trança na Vida!
+                </h1>
+
+                {/* IMAGE BELOW HEADLINE */}
+                <div className="flex justify-center pt-2 pb-2">
+                  <div className="relative group">
+                    {/* Decorative backglow */}
+                    <div className="absolute -inset-1 bg-gradient-to-r from-amber-400 to-rose-400 rounded-2xl blur-xl opacity-30 group-hover:opacity-45 transition-opacity"></div>
+                    
+                    <img
+                      src={EBOOK_COVER_PATH}
+                      alt="Guia Penteados Juninos"
+                      referrerPolicy="no-referrer"
+                      className="relative w-64 sm:w-80 md:w-[440px] rounded-2xl shadow-2xl border border-white/20 transform -rotate-1 group-hover:rotate-0 transition-all duration-300 mx-auto"
+                    />
+                  </div>
+                </div>
+
+                {/* Subheadline description */}
+                <p className="text-sm md:text-lg text-rose-50 font-medium max-w-2xl mx-auto leading-relaxed">
+                  Aprenda mais de <strong className="text-yellow-250 font-extrabold">+35 penteados juninos infantis</strong> simples, rápidos e encantadores através de vídeo aulas detalhadas passo a passo de fácil entendimento e bônus salvadores.
+                </p>
+
+                {/* 3. DETAILS & CTA CONTAINER */}
+                <div className="max-w-xl mx-auto pt-4 pb-2 bg-white/5 p-4 sm:p-6 rounded-3xl border border-white/10 backdrop-blur-xs space-y-6">
+                  {/* details list */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold text-left max-w-md mx-auto">
+                    <div className="flex items-center gap-2 text-rose-50">
+                      <span className="w-5 h-5 flex items-center justify-center bg-white/15 rounded-full text-amber-300 text-xs shrink-0">✔</span>
+                      <span>Acesso imediato no seu Email</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-rose-50">
+                      <span className="w-5 h-5 flex items-center justify-center bg-white/15 rounded-full text-amber-300 text-xs shrink-0">✔</span>
+                      <span>Vídeo Aulas Passo a Passo Sem Complicação</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-rose-50">
+                      <span className="w-5 h-5 flex items-center justify-center bg-white/15 rounded-full text-amber-300 text-xs shrink-0">✔</span>
+                      <span>Ideal Para Mães Iniciantes e com pouco tempo</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-rose-50">
+                      <span className="w-5 h-5 flex items-center justify-center bg-white/15 rounded-full text-amber-300 text-xs shrink-0">✔</span>
+                      <span>Bônus Exclusivos Para Cabelos Curtos inclusos</span>
+                    </div>
+                  </div>
+
+                  {/* 4. BOTÃO DE CTA PRINCIPAL */}
+                  <div className="space-y-4 max-w-sm mx-auto">
+                    <button
+                      onClick={scrollToOffer}
+                      id="hero-cta-btn"
+                      className="w-full py-4 bg-yellow-400 text-rose-900 font-black rounded-2xl hover:bg-yellow-300 transition-all text-xs sm:text-sm tracking-wide uppercase shadow-lg hover:shadow-xl hover:-translate-y-0.5 focus:ring-4 focus:ring-amber-300/40 cursor-pointer text-center flex items-center justify-center gap-2"
+                    >
+                      <ShoppingCart className="w-5 h-5" />
+                      QUERO DEIXAR MINHA FILHA LINDA NA FESTA JUNINA
+                    </button>
+                    
+                    <p className="text-center text-[10px] text-rose-100 font-medium">
+                      🛡️ Pagamento seguro de parcela única • Garantia Incondicional de 7 Dias.
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Angle cutting separator */}
+              <div className="absolute bottom-0 inset-x-0 h-8 bg-[#FAF9F6] origin-bottom-right transform"></div>
+            </header>
+
+            {/* SECTIONS LAYOUT CONTAINER */}
+            <div className="max-w-4xl mx-auto px-4 sm:px-6 space-y-16 mt-8">
+
+              {/* 7. VOCÊ JÁ PASSOU POR ISSO? (Sessão de Dor) */}
+              <section id="dor-section" className="bg-rose-50/70 border border-rose-100 rounded-3xl p-6 sm:p-8 relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-4 opacity-5">
+                  <AlertCircle className="w-32 h-32 text-rose-800" />
+                </div>
+
+                <div className="text-center max-w-xl mx-auto space-y-2.5">
+                  <span className="px-2.5 py-0.5 bg-rose-100 text-rose-700 text-xs font-bold rounded-sm uppercase tracking-wider">
+                    Sua Dificuldade Acaba Hoje
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-black text-rose-950 tracking-tight leading-tight">
+                    Você Já Se Sentiu Desesperada e Frustrada na Noite Da Festa Junina?
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-medium">
+                    Se você se identifica com uma ou mais situações abaixo, fique calma. Você faz parte de 92% das mães ocupadas que também passam por isso!
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                  {[
+                    { label: '😩 Descobriu que a Festa Junina é amanhã?', text: 'Recebeu o recado atrasado da escola de que haverá a quadrilha amanhã de manhã e você não providenciou nada?' },
+                    { label: '😩 Não sabe fazer nenhuma trança?', text: 'Toda vez que tenta fazer tranças embutidas, gomos ou laterais, tudo embola, solta em instantes ou o cabelo fica cheio de frizz torto?' },
+                    { label: '😩 Sua filha quer um penteado bonito?', text: 'Ela pede olhando fotos da internet de tranças bonitas com laços e fitas, e você fica insegura sabendo que não vai dar conta?' },
+                    { label: '😩 Vídeos da internet que parecem fáceis de ver, mas impossíveis na prática?', text: 'As cabeleireiras profissionais fazem parecer rápido, mas quando você tenta na cabeça da criança que se mexe, dá tudo errado?' },
+                    { label: '😩 Acaba fazendo sempre o mesmo penteado?', text: 'Desiste por cansaço no último momento e repete a mesma Maria-Chiquinha rala de todo ano sem decoração nenhuma?' }
+                  ].map((item, id) => (
+                    <div key={id} className="bg-white p-4.5 rounded-2xl border border-rose-100 shadow-3xs hover:border-rose-300 transition-colors">
+                      <p className="font-extrabold text-xs sm:text-sm text-rose-900">{item.label}</p>
+                      <p className="text-xs text-slate-500 leading-relaxed mt-2">{item.text}</p>
+                    </div>
+                  ))}
+                </div>
+
+                <p className="text-center text-xs font-semibold text-rose-700 mt-6 leading-relaxed max-w-lg mx-auto">
+                  💔 <strong>Não se culpe pelas dificuldades!</strong> Você não foi ensinada a trançar. Mas com vídeo aulas dinâmicas e o método simplificado para mães, em minutos você fará como se fosse profissional!
+                </p>
+              </section>
+
+              {/* 8. AGORA VOCÊ TEM UMA SOLUÇÃO SIMPLES */}
+              <section id="solution-section" className="text-center space-y-6">
+                <div className="max-w-xl mx-auto space-y-3">
+                  <div className="inline-flex py-1 px-3 bg-emerald-50 rounded-full text-emerald-800 text-xs font-bold border border-emerald-100 gap-1.5 justify-center items-center">
+                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    O Seu Guia Salva-Vidas Chegou!
+                  </div>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                    Apresentamos o Guia Completo: <br />&quot;+35 Penteados Juninos Infantis&quot;
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-semibold">
+                    Pensando exatamente nessas dificuldades, reunimos mais de 35 penteados juninos infantis explicados de forma simples e direta em vídeo aulas para que qualquer mãe consiga reproduzir em casa.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto pt-2 text-xs">
+                  <div className="bg-rose-50/40 p-4 rounded-2xl border border-rose-100/50">
+                    <Smile className="w-5 h-5 text-rose-600 mx-auto mb-2" />
+                    <p className="font-extrabold text-rose-900 mb-1">Mesmo sem experiência</p>
+                    <p className="text-slate-500 leading-normal">Não exigimos habilidades especiais prontas. Começamos com as amarrações básicas.</p>
+                  </div>
+                  <div className="bg-sky-50/40 p-4 rounded-2xl border border-sky-100/50">
+                    <Sparkles className="w-5 h-5 text-sky-600 mx-auto mb-2" />
+                    <p className="font-extrabold text-sky-900 mb-1">Sem precisar de tranças</p>
+                    <p className="text-slate-500 leading-normal">Existem modelos lindos com chuquinhas inteligentes, vídeos tutoriais fáceis e elásticos práticos.</p>
+                  </div>
+                  <div className="bg-amber-50/40 p-4 rounded-2xl border border-amber-100/50">
+                    <Heart className="w-5 h-5 text-amber-600 mx-auto mb-2" />
+                    <p className="font-extrabold text-amber-900 mb-1">Apenas alguns minutos</p>
+                    <p className="text-slate-500 leading-normal">Temos ideias de 5 a 10 minutos em vídeo para quem tem a rotina super corrida.</p>
+                  </div>
+                </div>
+              </section>
+
+              {/* GALERIA DE RESULTADOS REALISTAS (Carrossel Automático) */}
+              <section id="galeria-penteados" className="space-y-6">
+                <div className="text-center max-w-xl mx-auto space-y-1.5">
+                  <span className="px-3 py-1 bg-rose-100 text-rose-700 text-xs font-black rounded-full uppercase tracking-wider">
+                    Modelos Incríveis Que Você Fará
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                    Veja Alguns dos Penteados Reais que Você Vai Aprender!
+                  </h2>
+                  <p className="text-xs sm:text-sm text-slate-500 leading-relaxed font-semibold">
+                    Assista à nossa vitrine de resultados práticos em constante movimento ou deslize com o dedo:
+                  </p>
+                </div>
+                
+                <BraidsCarousel />
+              </section>
+
+              {/* 5. O QUE VOCÊ VAI RECEBER */}
+              <section id="what-you-receive" className="space-y-6">
+                <div className="text-center space-y-1">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-rose-600">Conteúdo do Material</span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">O Que Você Vai Aprender nas Vídeo Aulas do Guia Principal:</h2>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {[
+                    { title: '✔ +35 Vídeo Aulas Passo a Passo', text: 'Vídeos didáticos e diretos ao ponto, de fácil entendimento, mostrando cada detalhe do posicionamento correto das mãos.' },
+                    { title: '✔ Penteados para Cabelo Curto', text: 'Não tem comprimento? Vídeo aulas ensinando amarrações falsas de tranças, elásticos cruzados e chapeuzinhos de palha.' },
+                    { title: '✔ Penteados para Cabelo Médio', text: 'Opções incríveis gravadas para fazer rabos decorados com Chita caipira, tiaras laterais com fitas e coques rápidos.' },
+                    { title: '✔ Penteados para Cabelo Longo', text: 'Tranças caipiras deslumbrantes com lenços, tranças boxadoras decoradas com fitas coloridas marcantes explicadas em detalhes.' },
+                    { title: '✔ Tranças Simples de 3 Pontas', text: 'Aprenda do zero a segurar as mechas, de forma prática em vídeo, sem dar nó nem cansar os braços da sua bonequinha.' },
+                    { title: '✔ Lista de Materiais Necessários', text: 'Para cada vídeo indicamos o que você usará, inclusive ensinando a adaptar do que já tem na gaveta.' },
+                    { title: '✔ Técnicas para Penteado Durar e ter Brilho', text: 'Como segurar os fios rebeldes usando produtos baratos de farmácia para o penteado resistir o dia inteiro na quadrilha.' }
+                  ].map((card, idx) => (
+                    <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-3xs flex gap-3">
+                      <span className="text-lg text-rose-600 shrink-0 font-bold">✔</span>
+                      <div>
+                        <h4 className="font-black text-xs sm:text-sm text-slate-800 leading-tight">{card.title.replace('✔ ', '')}</h4>
+                        <p className="text-xs text-slate-500 leading-relaxed mt-1.5">{card.text}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* 6. PARA QUEM É? */}
+              <section id="for-who" className="space-y-6">
+                <div className="text-center space-y-1">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-sky-600">Para Quem Foi Feito?</span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Este material é perfeito para as mães que:</h2>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-xs">
+                  {[
+                    { text: 'Não sabem fazer tranças ou penteados elaborados de salão', bg: 'bg-rose-50/20' },
+                    { text: 'Precisam de ideias fáceis, rápidas e práticas de até 10 minutos', bg: 'bg-emerald-50/20' },
+                    { text: 'Querem economizar dinheiro e evitar filas estressantes de salão', bg: 'bg-sky-50/20' },
+                    { text: 'Desejam deixar a filha linda e se destacando na quadrilha escolar', bg: 'bg-amber-50/20' },
+                    { text: 'Buscam aprender um método prático e intuitivo de penteado infantil em vídeo', bg: 'bg-purple-50/20' },
+                    { text: 'Querem registrar fotos maravilhosas desse dia especial sem fúria', bg: 'bg-pink-50/20' }
+                  ].map((item, idx) => (
+                    <div key={idx} className={`p-4 rounded-2xl border border-slate-100 shadow-3xs flex items-center gap-2.5 ${item.bg}`}>
+                      <div className="w-5.5 h-5.5 rounded-full bg-white flex items-center justify-center text-rose-500 shrink-0 shadow-2xs font-bold text-[10px]">
+                        ✓
+                      </div>
+                      <span className="font-bold text-slate-700 leading-relaxed">{item.text}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* 10. BÔNUS EXCLUSIVOS */}
+              <section id="bonus-section" className="space-y-6">
+                <div className="text-center max-w-md mx-auto space-y-1.5">
+                  <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-black rounded-full uppercase tracking-wider">
+                    Presentes Exclusivos Inclusos
+                  </span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Veja os Super Bônus que você vai receber de Graça:</h2>
+                  <p className="text-xs text-slate-500">
+                    Se você comprar HOJE, leva estes 4 materiais complementares sem pagar nenhum centavo extra!
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {bonuses.map((bonus, idx) => (
+                    <div 
+                      key={bonus.id} 
+                      className={`p-5 rounded-3xl border text-left relative overflow-hidden flex flex-col justify-between min-h-[150px] ${
+                        bonus.highlight 
+                          ? 'border-rose-300 bg-rose-50/50 shadow-sm ring-1 ring-rose-200' 
+                          : 'border-amber-200 bg-gradient-to-br from-amber-50/35 to-amber-50/10'
+                      }`}
+                    >
+                      <div className="absolute top-0 right-0 p-2 bg-amber-400 text-rose-900 font-extrabold text-[8px] rounded-bl-xl uppercase tracking-wider">
+                        Gratuito
+                      </div>
+                      <div className="space-y-2">
+                        <h3 className="font-black text-xs sm:text-sm text-slate-800 leading-tight pr-14">
+                          {bonus.title}
+                        </h3>
+                        <p className="text-xs text-slate-500 leading-relaxed">
+                          {bonus.description}
+                        </p>
+                      </div>
+
+                      <div className="border-t border-slate-100 pt-3 mt-3 flex justify-between items-center text-[11px]">
+                        <span className="text-slate-400">
+                          Valor original: <span className="line-through font-mono">R$ {bonus.originalValue},00</span>
+                        </span>
+                        <span className="text-emerald-700 font-black">
+                          Hoje: GRÁTIS
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Value Summary block */}
+                <div className="p-4 bg-slate-50 rounded-2xl border border-slate-150 text-center text-xs text-slate-500 max-w-md mx-auto">
+                  🎁 Somente estes bônus separados custariam <strong className="font-mono text-rose-600 line-through">R$ 90,00</strong>. Comprando hoje, você leva todos eles inclusos na nossa oferta especial!
+                </div>
+              </section>
+
+              {/* 12. DEPOIMENTOS DE MÃES (Social proof) */}
+              <section id="depoimentos" className="space-y-6">
+                <div className="text-center space-y-1">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-rose-600">Amor Gravado por Mães</span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Quem já assistiu e usou, Recomenda:</h2>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {testimonials.map(t => (
+                    <div key={t.id} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-3xs flex flex-col justify-between gap-4">
+                      <div className="space-y-2">
+                        {/* Star generation */}
+                        <div className="flex gap-0.5" id={`stars-${t.id}`}>
+                          {Array.from({ length: t.stars }).map((_, idx) => (
+                            <Star key={idx} className="w-4 h-4 fill-amber-400 text-amber-400 shrink-0" />
+                          ))}
+                        </div>
+                        <p className="text-xs sm:text-xs text-slate-600 italic leading-relaxed">
+                          &quot;{t.text}&quot;
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              {/* 11. CARD DE OFERTA PRINCIPAL */}
+              <section 
+                ref={offerSectionRef} 
+                className="relative bg-gradient-to-br from-rose-600 via-rose-600 to-rose-700 text-white rounded-3xl p-6 sm:p-8 shadow-xl max-w-lg mx-auto text-center space-y-6 border border-rose-500 overflow-hidden" 
+                id="oferta-card"
+              >
+                {/* Subtle backglow */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-amber-400/10 rounded-full blur-3xl"></div>
+                
+                {/* Image at the top of Offer Section */}
+                <div className="flex justify-center pb-2">
+                  <div className="relative group">
+                    <img
+                      src="https://i.ibb.co/cc1VL9HK/Chat-GPT-Image-4-de-jun-de-2026-12-58-04.png"
+                      alt="Guia Penteados Juninos"
+                      referrerPolicy="no-referrer"
+                      className="w-56 sm:w-72 md:w-80 rounded-2xl shadow-lg border border-white/20 transform hover:scale-105 transition-transform duration-300 mx-auto"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-1.55">
+                  <span className="px-3 py-1 bg-yellow-400 text-rose-950 text-[10px] font-black rounded-full uppercase tracking-wider">
+                    COMPRE COM SEGURANÇA
+                  </span>
+                  <p className="text-xs text-rose-100 font-semibold uppercase tracking-wider pt-1.5">
+                    Guia Principal + 4 Bônus Exclusivos
+                  </p>
+                  <h3 className="text-2xl sm:text-3.5xl font-black text-white leading-tight">
+                    +35 Penteados Juninos Infantis
+                  </h3>
+                </div>
+
+                {/* Offer list checklist */}
+                <div className="text-left max-w-sm mx-auto bg-white/7 py-4 px-5 rounded-2xl border border-white/5 space-y-2.5 text-xs text-rose-50 font-bold">
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-300">✔</span>
+                    <span>Guia em vídeo com +35 penteados práticos</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-300">✔</span>
+                    <span>Bônus 1: Penteados para Cabelos Curtos</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-300">✔</span>
+                    <span>Bônus 2: Guia de Tranças para Iniciantes</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-300">✔</span>
+                    <span>Bônus 3: Lista de Materiais Econômicos</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-yellow-300">✔</span>
+                    <span>Bônus 4: 10 Penteados Rápidos de 5 min</span>
+                  </div>
+                </div>
+
+                {/* Pricing section */}
+                <div className="space-y-1">
+                  <p className="text-xs text-rose-200 line-through">De R$ 47,00</p>
+                  <p className="text-xs text-rose-100">Por Apenas</p>
+                  <p className="text-4xl sm:text-5xl font-black text-yellow-300 tracking-tight font-mono">
+                    R$ 10,00
+                  </p>
+                  <p className="text-[10px] text-rose-100 tracking-wide uppercase font-semibold">
+                    Pagamento único • Sem Mensalidades
+                  </p>
+                </div>
+
+                {/* Purchase Button */}
+                <a
+                  href="https://pay.lowify.com.br/checkout.php?product_id=2nKgYP"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  id="checkout-cta-btn"
+                  className="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-white font-extrabold rounded-2xl text-sm tracking-wide uppercase shadow-lg transition-transform hover:-translate-y-0.5 focus:ring-4 focus:ring-emerald-300/40 cursor-pointer flex items-center justify-center gap-1.5 no-underline"
+                >
+                  <ShoppingCart className="w-5 h-5 shrink-0" />
+                  QUERO MEU ACESSO AGORA
+                </a>
+
+                {/* Fast secure indicators */}
+                <div className="flex justify-center items-center gap-4 text-[10px] text-rose-150 pt-2 border-t border-white/10">
+                  <span className="flex items-center gap-1">🔒 SSL Criptografado</span>
+                  <span>•</span>
+                  <span>⚡ Liberação On-line Imediata</span>
+                  <span>•</span>
+                  <span>🛡️ Reembolso fácil</span>
+                </div>
+              </section>
+
+              {/* 13. GARANTIA */}
+              <section id="garantia" className="bg-white border-2 border-dashed border-amber-300 rounded-3xl p-6 sm:p-8 flex flex-col md:flex-row items-center gap-6 max-w-3xl mx-auto shadow-2xs">
+                {/* Guarantee Shield Emblem */}
+                <div className="shrink-0 flex items-center justify-center bg-amber-50 border border-amber-200/50 p-4.5 rounded-full relative">
+                  <ShieldCheck className="w-12 h-12 text-amber-600" />
+                  <div className="absolute -bottom-1 bg-amber-400 text-rose-900 font-black text-[9px] px-2 py-0.5 rounded-full uppercase">
+                    7 DIAS
+                  </div>
+                </div>
+
+                <div className="space-y-2 text-center md:text-left">
+                  <h3 className="text-base sm:text-lg font-black text-slate-800 tracking-tight">Garantia Blindada de Satisfação Total 7 Dias</h3>
+                  <p className="text-xs sm:text-xs text-slate-500 leading-relaxed font-medium">
+                    Acesse todo o nosso portal de vídeo aulas e os bônus sem perigo! Se dentro de 7 dias você assistir às vídeo aulas de penteados e decidir que o conteúdo não serve para você ou que sua filha não se adaptou, basta nos enviar um e-mail que devolveremos 100% do seu valor imediatamente. Sem complicação.
+                  </p>
+                </div>
+              </section>
+
+              {/* 14. FAQ PERGUNTAS FREQUENTES */}
+              <section id="faq" className="space-y-6">
+                <div className="text-center space-y-1">
+                  <span className="text-[10px] uppercase font-black tracking-wider text-rose-600">Dúvidas Frequentes</span>
+                  <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Perguntas Respondidas:</h2>
+                </div>
+
+                <div className="max-w-2xl mx-auto space-y-2" id="faq-accordions">
+                  {faqItems.map(faq => {
+                    const isOpen = activeFaqId === faq.id;
+                    return (
+                      <div 
+                        key={faq.id} 
+                        className="bg-white rounded-xl border border-slate-200/65 overflow-hidden transition-all text-left"
+                      >
+                        <button
+                          onClick={() => setActiveFaqId(isOpen ? null : faq.id)}
+                          className="w-full p-4 font-bold text-slate-800 text-xs sm:text-sm hover:bg-slate-50/55 transition-colors flex items-center justify-between gap-3 text-left cursor-pointer"
+                        >
+                          <span className="flex items-center gap-1.5 font-extrabold">
+                            <HelpCircle className="w-4 h-4 text-rose-500 shrink-0" />
+                            {faq.question}
+                          </span>
+                          {isOpen ? (
+                            <ChevronUp className="w-4 h-4 text-slate-400" />
+                          ) : (
+                            <ChevronDown className="w-4 h-4 text-slate-400" />
+                          )}
+                        </button>
+
+                        <AnimatePresence>
+                          {isOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: 'auto', opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="border-t border-slate-100 bg-[#FAF9F6]/50 text-xs text-slate-500 leading-relaxed"
+                            >
+                              <div className="p-4 font-medium select-text">
+                                {faq.answer}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+                </div>
+              </section>
+
+            </div>
+
+            {/* 15. RODAPÉ (Professional Footer) */}
+            <footer className="mt-20 border-t border-slate-200/70 bg-[#FAF9F6]">
+              <div className="max-w-4xl mx-auto px-4 py-10 text-center space-y-6">
+                
+                {/* Security badges images in text rows */}
+                <div className="flex flex-wrap justify-center items-center gap-5 text-slate-400 text-xs font-semibold">
+                  <span>🛡️ SITE COMPROMETIDO COM A PROTEÇÃO DE DADOS</span>
+                  <span className="text-slate-300">•</span>
+                  <span>🔒 TRANSAÇÃO SEGURA SSL</span>
+                  <span className="text-slate-300">•</span>
+                  <span>💳 APROVADO PELAS BANDEIRAS LÍDERES</span>
+                </div>
+
+                <p className="text-[11px] text-slate-400 max-w-xl mx-auto leading-relaxed">
+                  <strong>Aviso Legal Importante:</strong> &quot;Este site não é afiliado ou endossado pelo Facebook, Instagram, Google ou TikTok. Todas as marcas registradas pertencem a seus respectivos donos. O resultado pode variar dependendo do tempo de treino e da paciência da mãe.&quot;
+                </p>
+
+                {/* Mini links */}
+                <div className="flex justify-center gap-4 text-[10px] font-bold text-rose-600 uppercase tracking-wider">
+                  <a href="#rodapé" className="hover:underline">Termos de Uso</a>
+                  <span>•</span>
+                  <a href="#rodapé" className="hover:underline">Política de Privacidade</a>
+                  <span>•</span>
+                  <a href="#rodapé" className="hover:underline">Contato de Suporte</a>
+                </div>
+
+                <div className="text-[10px] text-slate-450 leading-relaxed pt-2 border-t border-slate-200/50">
+                  <p>+35 Penteados Juninos Infantis © 2026. Todos os direitos reservados.</p>
+                  <p className="opacity-75">CNPJ sob simulação: 12.345.678/0001-90 | contato@penteadosjuninos.com.br</p>
+                </div>
+              </div>
+            </footer>
+
+            {/* REAL-TIME DYNAMIC SOCIAL PROOF TOAST POPUP */}
+            <AnimatePresence>
+              {recentPurchaseName && (
+                <motion.div
+                  initial={{ opacity: 0, x: -50, y: 50 }}
+                  animate={{ opacity: 1, x: 0, y: 0 }}
+                  exit={{ opacity: 0, x: -50, y: 50 }}
+                  className="fixed bottom-4 left-4 z-40 bg-white border border-rose-100 p-3 sm:p-4 rounded-xl shadow-xl flex items-center gap-2.5 max-w-xs"
+                >
+                  <div className="p-2 bg-emerald-100 text-emerald-800 rounded-full">
+                    <ThumbsUp className="w-4 h-4" />
+                  </div>
+                  <div className="text-left text-xs">
+                    <p className="font-extrabold text-slate-800">Nova compra realizada!</p>
+                    <p className="text-[10px] text-slate-500 mt-0.5">
+                      <strong>{recentPurchaseName}</strong> acabou de adquirir o Guia + Bônus!
+                    </p>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Simulated Checkout Overlay Modal */}
+            <CheckoutModal
+              isOpen={isCheckoutOpen}
+              onClose={() => setIsCheckoutOpen(false)}
+              onSuccess={handleCheckoutSuccess}
+            />
+
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+    </div>
+  );
+}

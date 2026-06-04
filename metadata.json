@@ -1,0 +1,6 @@
+{
+  "name": "Penteados Juninos Infantis",
+  "description": "Página de vendas premium, responsiva e otimizada para o eBook +35 Penteados Juninos Infantis com bônus exclusivos, avaliações, FAQ e simulador de checkout para mães.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
