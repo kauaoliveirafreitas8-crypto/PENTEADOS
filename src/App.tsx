@@ -198,7 +198,7 @@ export default function App() {
                     </div>
                     <div className="flex items-center gap-2 text-rose-50">
                       <span className="w-5 h-5 flex items-center justify-center bg-white/15 rounded-full text-amber-300 text-xs shrink-0">✔</span>
-                      <span>Bônus Exclusivos Para Cabelos Curtos inclusos</span>
+                      <span>Super Bônus de Looks e Acessórios inclusos</span>
                     </div>
                   </div>
 
@@ -327,21 +327,45 @@ export default function App() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {[
                     { title: '✔ +35 Vídeo Aulas Passo a Passo', text: 'Vídeos didáticos e diretos ao ponto, de fácil entendimento, mostrando cada detalhe do posicionamento correto das mãos.' },
-                    { title: '✔ Penteados para Cabelo Curto', text: 'Não tem comprimento? Vídeo aulas ensinando amarrações falsas de tranças, elásticos cruzados e chapeuzinhos de palha.' },
-                    { title: '✔ Penteados para Cabelo Médio', text: 'Opções incríveis gravadas para fazer rabos decorados com Chita caipira, tiaras laterais com fitas e coques rápidos.' },
-                    { title: '✔ Penteados para Cabelo Longo', text: 'Tranças caipiras deslumbrantes com lenços, tranças boxadoras decoradas com fitas coloridas marcantes explicadas em detalhes.' },
-                    { title: '✔ Tranças Simples de 3 Pontas', text: 'Aprenda do zero a segurar as mechas, de forma prática em vídeo, sem dar nó nem cansar os braços da sua bonequinha.' },
+                    { title: '✔ Penteados para Cabelo Curto', text: 'Não tem comprimento? Vídeo aulas ensinando amarrações falsas de tranças, elásticos cruzados e chapeuzinhos de palha.', image: 'https://i.ibb.co/7tKb0B2z/curto.png' },
+                    { title: '✔ Penteados para Cabelo Médio', text: 'Opções incríveis gravadas para fazer rabos decorados com Chita caipira, tiaras laterais com fitas e coques rápidos.', image: 'https://i.ibb.co/qLsCcZrV/medio.png' },
+                    { title: '✔ Penteados para Cabelo Longo', text: 'Tranças caipiras deslumbrantes com lenços, tranças boxadoras decoradas com fitas coloridas marcantes explicadas em detalhes.', image: 'https://i.ibb.co/SDkgQdN2/longocerto.png' },
+                    { title: '✔ Tranças Simples de 3 Pontas', text: 'Aprenda do zero a segurar as mechas, de forma prática em vídeo, sem dar nó nem cansar os braços da sua bonequinha.', image: 'https://i.ibb.co/Y4qJPc1q/tres-pontas.png' },
                     { title: '✔ Lista de Materiais Necessários', text: 'Para cada vídeo indicamos o que você usará, inclusive ensinando a adaptar do que já tem na gaveta.' },
                     { title: '✔ Técnicas para Penteado Durar e ter Brilho', text: 'Como segurar os fios rebeldes usando produtos baratos de farmácia para o penteado resistir o dia inteiro na quadrilha.' }
                   ].map((card, idx) => (
                     <div key={idx} className="bg-white p-5 rounded-2xl border border-slate-100 shadow-3xs flex gap-3">
                       <span className="text-lg text-rose-600 shrink-0 font-bold">✔</span>
-                      <div>
+                      <div className="flex-1">
+                        {card.image && (
+                          <div className="mb-3 overflow-hidden rounded-xl border border-rose-100/30 shadow-3xs bg-rose-50/10">
+                            <img 
+                              src={card.image} 
+                              alt={card.title} 
+                              referrerPolicy="no-referrer"
+                              className="w-full h-auto object-cover max-h-60 rounded-xl"
+                            />
+                          </div>
+                        )}
                         <h4 className="font-black text-xs sm:text-sm text-slate-800 leading-tight">{card.title.replace('✔ ', '')}</h4>
                         <p className="text-xs text-slate-500 leading-relaxed mt-1.5">{card.text}</p>
                       </div>
                     </div>
                   ))}
+                </div>
+
+                {/* BOTÃO DIRECIONADOR PARA A SEÇÃO DE OFERTA */}
+                <div className="pt-6 text-center max-w-sm sm:max-w-md mx-auto space-y-3">
+                  <button
+                    onClick={scrollToOffer}
+                    className="w-full py-4 bg-yellow-400 text-rose-900 font-black rounded-2xl hover:bg-yellow-300 transition-all text-xs sm:text-sm tracking-wide uppercase shadow-lg hover:shadow-xl hover:-translate-y-0.5 focus:ring-4 focus:ring-amber-300/40 cursor-pointer text-center flex items-center justify-center gap-2"
+                  >
+                    <ShoppingCart className="w-5 h-5" />
+                    Quero Garantir Meu Acesso
+                  </button>
+                  <p className="text-[10px] text-slate-400 font-semibold">
+                    🛡️ Pagamento único e seguro • Receba o acesso imediatamente
+                  </p>
                 </div>
               </section>
 
@@ -379,7 +403,7 @@ export default function App() {
                   </span>
                   <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">Veja os Super Bônus que você vai receber de Graça:</h2>
                   <p className="text-xs text-slate-500">
-                    Se você comprar HOJE, leva estes 4 materiais complementares sem pagar nenhum centavo extra!
+                    Se você comprar HOJE, leva estes 3 materiais complementares sem pagar nenhum centavo extra!
                   </p>
                 </div>
 
@@ -419,7 +443,7 @@ export default function App() {
 
                 {/* Value Summary block */}
                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-150 text-center text-xs text-slate-500 max-w-md mx-auto">
-                  🎁 Somente estes bônus separados custariam <strong className="font-mono text-rose-600 line-through">R$ 90,00</strong>. Comprando hoje, você leva todos eles inclusos na nossa oferta especial!
+                  🎁 Somente estes bônus separados custariam <strong className="font-mono text-rose-600 line-through">R$ 70,00</strong>. Comprando hoje, você leva todos eles inclusos na nossa oferta especial!
                 </div>
               </section>
 
@@ -471,11 +495,8 @@ export default function App() {
                 </div>
                 
                 <div className="space-y-1.55">
-                  <span className="px-3 py-1 bg-yellow-400 text-rose-950 text-[10px] font-black rounded-full uppercase tracking-wider">
-                    COMPRE COM SEGURANÇA
-                  </span>
                   <p className="text-xs text-rose-100 font-semibold uppercase tracking-wider pt-1.5">
-                    Guia Principal + 4 Bônus Exclusivos
+                    Guia Principal + 3 Bônus Exclusivos
                   </p>
                   <h3 className="text-2xl sm:text-3.5xl font-black text-white leading-tight">
                     +35 Penteados Juninos Infantis
@@ -490,19 +511,24 @@ export default function App() {
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-yellow-300">✔</span>
-                    <span>Bônus 1: Penteados para Cabelos Curtos</span>
+                    <span>Bônus 1: Checklist e Lista de Materiais Econômicos</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-yellow-300">✔</span>
-                    <span>Bônus 2: Guia de Tranças para Iniciantes</span>
+                    <span>Bônus 2: 20 Ideias de Looks Juninos Femininos</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <span className="text-yellow-300">✔</span>
-                    <span>Bônus 3: Lista de Materiais Econômicos</span>
+                    <span>Bônus 3: Guia de Laços, Fitas e Acessórios Juninos</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-yellow-300">✔</span>
-                    <span>Bônus 4: 10 Penteados Rápidos de 5 min</span>
+                  <div className="h-px bg-white/10 my-1"></div>
+                  <div className="flex items-center gap-1.5 text-yellow-300">
+                    <span>🛡️</span>
+                    <span>Garantia de 7 Dias Incondicional</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-yellow-300">
+                    <span>⚡</span>
+                    <span>Acesso Vitalício</span>
                   </div>
                 </div>
 
@@ -638,7 +664,6 @@ export default function App() {
 
                 <div className="text-[10px] text-slate-450 leading-relaxed pt-2 border-t border-slate-200/50">
                   <p>+35 Penteados Juninos Infantis © 2026. Todos os direitos reservados.</p>
-                  <p className="opacity-75">CNPJ sob simulação: 12.345.678/0001-90 | contato@penteadosjuninos.com.br</p>
                 </div>
               </div>
             </footer>

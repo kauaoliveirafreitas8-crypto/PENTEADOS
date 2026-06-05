@@ -157,7 +157,7 @@ export const testimonials: Testimonial[] = [
   {
     id: 't2',
     name: 'Carla Vasconcellos',
-    text: 'Eu gastava quase R$ 120,00 no salão todo ano para arrumar o cabelo da minha filha pra festa junina além do estresse das filas. Com o Guia gastei menos de 10 reais comprando fitas de cetim e fiz eu mesma assistindo as aulas da "Trança Caipira Clássica". O passo a passo é extremamente detalhado e muito mais fácil do que os vídeos difíceis que a gente vê no YouTube!',
+    text: 'Eu gastava quase R$ 120,00 no salão todo ano para arrumar o cabelo da minha filha pra festa junina além do estresse das filas. Com o Guia gastei menos de 10 reais comprando fitas de cetim e fiz eu mesma assistindo as aulas da "Trança Caipira Clássica". O passo a passo é extremamente detalhado e muito mais fácil do que os vídeos difíceis que a gente vê na internet!',
     stars: 5,
     role: 'Mãe da Gabi (8 anos)',
     avatar: 'https://picsum.photos/seed/user2/100/100'
@@ -183,27 +183,21 @@ export const testimonials: Testimonial[] = [
 export const bonuses: Bonus[] = [
   {
     id: 'b1',
-    title: 'BÔNUS 1: 10 Penteados de Festa Junina Para Cabelos Curtos e Franjas',
-    description: 'Vídeos exclusivos com ideias de tiaras de elásticos, meias-presilhas e amarrações com pompons que não dependem de volume ou comprimento.',
-    originalValue: 27
-  },
-  {
-    id: 'b2',
-    title: 'BÔNUS 2: Guia Prático de Tranças Seguras para Iniciantes (O "Zero a Zero")',
-    description: 'Aprenda do absoluto zero em vídeo a segurar as mechas sem embaraçar o cabelo ou machucar o couro cabeludo sensível da criança.',
+    title: 'BÔNUS 1: 🎁 Checklist e Lista de Materiais Econômicos',
+    description: 'Receba uma lista completa dos acessórios e materiais mais utilizados nos penteados juninos, incluindo opções econômicas e fáceis de encontrar. Economize tempo e dinheiro sabendo exatamente o que comprar para criar penteados lindos sem gastar uma fortuna.',
     originalValue: 19
   },
   {
-    id: 'b3',
-    title: 'BÔNUS 3: Checklist e Lista de Materiais Econômicos',
-    description: 'Acesse pelo celular nas compras e compre as fitas e mini-enfeites corretos com apenas R$ 15,00 ou menos.',
-    originalValue: 12
+    id: 'b2',
+    title: 'BÔNUS 2: 🎁 20 Ideias de Looks Juninos Femininos',
+    description: 'Neste guia especial você encontrará 20 inspirações de looks juninos femininos, desde opções simples e econômicas até produções mais elaboradas, para combinar perfeitamente com os penteados do curso.',
+    originalValue: 27
   },
   {
-    id: 'b4',
-    title: 'BÔNUS 4: 10 Penteados Salvadores "Express" de Até 5 Minutos em Vídeo',
-    description: 'Atrasou ou a criança está agitada demais? Assista a estes tutoriais rápidos, lindos e fáceis de fixar.',
-    originalValue: 32,
+    id: 'b3',
+    title: 'BÔNUS 3: 🎁 Guia de Laços, Fitas e Acessórios Juninos',
+    description: 'Descubra quais laços, fitas e acessórios combinam melhor com cada tipo de penteado e como utilizá-los para criar um visual encantador, colorido e cheio de personalidade.',
+    originalValue: 24,
     highlight: true
   }
 ];
