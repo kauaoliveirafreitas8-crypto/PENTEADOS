@@ -157,7 +157,7 @@ export default function App() {
 
                 {/* 2. HEADLINE PRINCIPAL (Emotional pain-focused) */}
                 <h1 className="text-3xl sm:text-4xl md:text-5.5xl font-black tracking-tight leading-none md:leading-tight">
-                  Aprenda Mais de 35 Penteados Juninos Infantis de Forma <span className="text-amber-300 underline underline-offset-4">Simples e Fácil</span>!
+                  Aprenda Mais de +35 Penteados Juninos Infantis de Forma <span className="text-amber-300 underline underline-offset-4">Simples e Fácil</span>!
                 </h1>
 
                 {/* IMAGE BELOW HEADLINE */}
