@@ -25,6 +25,7 @@ export interface Bonus {
   description: string;
   originalValue: number;
   highlight?: boolean;
+  image?: string;
 }
 
 export interface FAQItem {

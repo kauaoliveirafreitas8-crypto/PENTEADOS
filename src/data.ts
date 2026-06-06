@@ -185,20 +185,23 @@ export const bonuses: Bonus[] = [
     id: 'b1',
     title: 'BÔNUS 1: 🎁 Checklist e Lista de Materiais Econômicos',
     description: 'Receba uma lista completa dos acessórios e materiais mais utilizados nos penteados juninos, incluindo opções econômicas e fáceis de encontrar. Economize tempo e dinheiro sabendo exatamente o que comprar para criar penteados lindos sem gastar uma fortuna.',
-    originalValue: 19
+    originalValue: 19,
+    image: 'https://i.ibb.co/Fq8sBqzt/bonus-01-removebg-preview.png'
   },
   {
     id: 'b2',
     title: 'BÔNUS 2: 🎁 20 Ideias de Looks Juninos Femininos',
     description: 'Neste guia especial você encontrará 20 inspirações de looks juninos femininos, desde opções simples e econômicas até produções mais elaboradas, para combinar perfeitamente com os penteados do curso.',
-    originalValue: 27
+    originalValue: 27,
+    image: 'https://i.ibb.co/GQMC53G2/Chat-GPT-Image-6-de-jun-de-2026-14-04-12-removebg-preview.png'
   },
   {
     id: 'b3',
     title: 'BÔNUS 3: 🎁 Guia de Laços, Fitas e Acessórios Juninos',
     description: 'Descubra quais laços, fitas e acessórios combinam melhor com cada tipo de penteado e como utilizá-los para criar um visual encantador, colorido e cheio de personalidade.',
     originalValue: 24,
-    highlight: true
+    highlight: true,
+    image: 'https://i.ibb.co/7JQs7VSy/Chat-GPT-Image-6-de-jun-de-2026-14-18-49-removebg-preview.png'
   }
 ];
 
